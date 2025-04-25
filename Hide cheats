@@ -4,13 +4,11 @@ local player = Players.LocalPlayer
 
 local matchedGUIs = {}
 
--- Whitelisted GUI names (16-character exact names you want to ignore)
 local nameWhitelist = {
     ["CallDialogScreen"] = true,
     ["PlayerMenuScreen"] = true,
 }
 
--- Function to find and store matching GUIs
 local function findMatchingGUIs()
     matchedGUIs = {}
 
@@ -28,7 +26,6 @@ local function findMatchingGUIs()
     end
 end
 
--- Function to disable ScreenGui named "ScreenGui" and ScreenGui named "UIButton"
 local function disableDirectGUIs()
     for _, child in ipairs(CoreGui:GetChildren()) do
         -- Disable if the ScreenGui's name is "ScreenGui"
@@ -42,23 +39,18 @@ local function disableDirectGUIs()
         end
     end
 end
-
--- Initial scan to find and disable relevant GUIs
 findMatchingGUIs()
 disableDirectGUIs()
 
--- Listen for chat commands
 player.Chatted:Connect(function(message)
     local cmd = message:lower()
     if cmd == "/e enable" then
-        -- Enable all matching GUIs
         for _, gui in ipairs(matchedGUIs) do
             if gui and gui:IsDescendantOf(CoreGui) then
                 gui.Enabled = true
                 print("Enabled:", gui:GetFullName())
             end
         end
-        -- Enable specific GUIs named "ScreenGui" and "UIButton"
         for _, child in ipairs(CoreGui:GetChildren()) do
             if child:IsA("ScreenGui") and (child.Name == "ScreenGui" or child.Name == "UIButton") then
                 child.Enabled = true
@@ -66,14 +58,12 @@ player.Chatted:Connect(function(message)
             end
         end
     elseif cmd == "/e disable" then
-        -- Disable all matching GUIs
         for _, gui in ipairs(matchedGUIs) do
             if gui and gui:IsDescendantOf(CoreGui) then
                 gui.Enabled = false
                 print("Disabled:", gui:GetFullName())
             end
         end
-        -- Disable specific GUIs named "ScreenGui" and "UIButton"
         for _, child in ipairs(CoreGui:GetChildren()) do
             if child:IsA("ScreenGui") and (child.Name == "ScreenGui" or child.Name == "UIBUTTON") then
                 child.Enabled = false
