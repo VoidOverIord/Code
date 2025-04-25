@@ -1,0 +1,84 @@
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+local player = Players.LocalPlayer
+
+local matchedGUIs = {}
+
+-- Whitelisted GUI names (16-character exact names you want to ignore)
+local nameWhitelist = {
+    ["CallDialogScreen"] = true,
+    ["PlayerMenuScreen"] = true,
+}
+
+-- Function to find and store matching GUIs
+local function findMatchingGUIs()
+    matchedGUIs = {}
+
+    for _, descendant in ipairs(CoreGui:GetDescendants()) do
+        if descendant:IsA("ScreenGui") and #descendant.Name == 16 and not nameWhitelist[descendant.Name] then
+            table.insert(matchedGUIs, descendant)
+            print("Will disable:", descendant:GetFullName())
+            task.delay(3, function()
+                if descendant and descendant:IsDescendantOf(CoreGui) then
+                    descendant.Enabled = false
+                    print("Disabled:", descendant:GetFullName())
+                end
+            end)
+        end
+    end
+end
+
+-- Function to disable ScreenGui named "ScreenGui" and ScreenGui named "UIButton"
+local function disableDirectGUIs()
+    for _, child in ipairs(CoreGui:GetChildren()) do
+        -- Disable if the ScreenGui's name is "ScreenGui"
+        if child:IsA("ScreenGui") and child.Name == "ScreenGui" then
+            child.Enabled = false
+            print("Disabled ScreenGui named 'ScreenGui':", child:GetFullName())
+        -- Disable if the ScreenGui's name is "UIButton"
+        elseif child:IsA("ScreenGui") and child.Name == "UIButton" then
+            child.Enabled = false
+            print("Disabled ScreenGui named 'UIButton':", child:GetFullName())
+        end
+    end
+end
+
+-- Initial scan to find and disable relevant GUIs
+findMatchingGUIs()
+disableDirectGUIs()
+
+-- Listen for chat commands
+player.Chatted:Connect(function(message)
+    local cmd = message:lower()
+    if cmd == "/e enable" then
+        -- Enable all matching GUIs
+        for _, gui in ipairs(matchedGUIs) do
+            if gui and gui:IsDescendantOf(CoreGui) then
+                gui.Enabled = true
+                print("Enabled:", gui:GetFullName())
+            end
+        end
+        -- Enable specific GUIs named "ScreenGui" and "UIButton"
+        for _, child in ipairs(CoreGui:GetChildren()) do
+            if child:IsA("ScreenGui") and (child.Name == "ScreenGui" or child.Name == "UIButton") then
+                child.Enabled = true
+                print("Enabled ScreenGui named:", child:GetFullName())
+            end
+        end
+    elseif cmd == "/e disable" then
+        -- Disable all matching GUIs
+        for _, gui in ipairs(matchedGUIs) do
+            if gui and gui:IsDescendantOf(CoreGui) then
+                gui.Enabled = false
+                print("Disabled:", gui:GetFullName())
+            end
+        end
+        -- Disable specific GUIs named "ScreenGui" and "UIButton"
+        for _, child in ipairs(CoreGui:GetChildren()) do
+            if child:IsA("ScreenGui") and (child.Name == "ScreenGui" or child.Name == "UIBUTTON") then
+                child.Enabled = false
+                print("Disabled ScreenGui named:", child:GetFullName())
+            end
+        end
+    end
+end)
