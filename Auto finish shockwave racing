@@ -1,13 +1,25 @@
---use at your own risk
+-- use at your own risk
 local part = workspace.Finish.Finish
-local hum = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+local player = game.Players.LocalPlayer
 
-if not hum then
-    return
+local function startTouchSpam(character)
+    local hum = character:WaitForChild("HumanoidRootPart")
+    if not hum then
+        return
+    end
+    task.spawn(function()
+        while hum.Parent do
+            firetouchinterest(hum, part, 0)
+            firetouchinterest(hum, part, 1)
+            task.wait(0.01)
+        end
+    end)
 end
 
-while true do
-    firetouchinterest(hum, part, 0)
-    firetouchinterest(hum, part, 1)
-    task.wait(0.01)
+if player.Character then
+    startTouchSpam(player.Character)
 end
+
+player.CharacterAdded:Connect(function(character)
+    startTouchSpam(character)
+end)
