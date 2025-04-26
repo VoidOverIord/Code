@@ -1,0 +1,13 @@
+--use at your own risk
+local part = workspace.Finish.Finish
+local hum = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+
+if not hum then
+    return
+end
+
+while true do
+    firetouchinterest(hum, part, 0)
+    firetouchinterest(hum, part, 1)
+    task.wait(0.01)
+end
