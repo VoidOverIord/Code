@@ -1,12 +1,10 @@
--- use at your own risk
+-- Use at your own risk
+local player = game:GetService("Players").LocalPlayer
 local part = workspace.Finish.Finish
-local player = game.Players.LocalPlayer
 
 local function startTouchSpam(character)
     local hum = character:WaitForChild("HumanoidRootPart")
-    if not hum then
-        return
-    end
+    if not hum then return end
     task.spawn(function()
         while hum.Parent do
             firetouchinterest(hum, part, 0)
@@ -16,10 +14,24 @@ local function startTouchSpam(character)
     end)
 end
 
+local function setupGamemodeCheck()
+    local success, label = pcall(function()
+        return player:WaitForChild("PlayerGui"):WaitForChild("Main"):WaitForChild("Primary"):WaitForChild("HUD"):WaitForChild("SubFrame"):WaitForChild("GamemodeLabel")
+    end)
+    if success and label then
+        local function check()
+            if label.Text == "Winning Streak" then
+                player:Kick("Gamemode is Winning Streak. We have kicked you because we have found out this gamemode can ban you if you get too many wins if you wish to continue playing next time you can use infinite yield antikick")
+            end
+        end
+        check()
+        label:GetPropertyChangedSignal("Text"):Connect(check)
+    end
+end
+
 if player.Character then
     startTouchSpam(player.Character)
 end
 
-player.CharacterAdded:Connect(function(character)
-    startTouchSpam(character)
-end)
+player.CharacterAdded:Connect(startTouchSpam)
+setupGamemodeCheck()
