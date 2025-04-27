@@ -21,7 +21,8 @@ local function setupGamemodeCheck()
     if success and label then
         local function check()
             if label.Text == "Winning Streak" then
-                player:Kick("Gamemode is Winning Streak. We have kicked you because we have found out this gamemode can ban you if you get too many wins if you wish to continue playing next time you can use infinite yield antikick")
+                player:Kick("Gamemode is Winning Streak. We have kicked you because we have found out this gamemode can ban you if you get too many wins if you wish to continue playing next time you can use infinite yield antikick alternatively you can use remotespy and spam fire remote for the gamemode you voted for
+")
             end
         end
         check()
