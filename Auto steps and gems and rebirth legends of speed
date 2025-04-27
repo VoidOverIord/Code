@@ -19,5 +19,5 @@ for i = 1, math.huge do
     orbEvent:FireServer(unpack(args1))
     orbEvent:FireServer(unpack(args2))
     rebirthEvent:FireServer(unpack(args3))
-    task.wait()
+    wait()
 end
