@@ -1,0 +1,16 @@
+for i = 1, math.huge do
+    local args1 = {
+        [1] = "collectOrb",
+        [2] = "Red Orb",
+        [3] = "City"
+    }
+    local args2 = {
+        [1] = "collectOrb",
+        [2] = "Gem",
+        [3] = "City"
+    }
+    local orbEvent = game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("orbEvent")
+    orbEvent:FireServer(unpack(args1))
+    orbEvent:FireServer(unpack(args2))
+    task.wait()
+end
