@@ -14,10 +14,36 @@ for i = 1, math.huge do
         [3] = "City"
     }
     local args3 = {
+        [1] = "collectOrb",
+        [2] = "Orange Orb",
+        [3] = "City"
+    }
+    local args4 = {
+        [1] = "collectOrb",
+        [2] = "Yellow Orb",
+        [3] = "City"
+    }
+    local args5 = {
+        [1] = "collectOrb",
+        [2] = "Blue Orb",
+        [3] = "City"
+    }
+    local args6 = {
+        [1] = "collectOrb",
+        [2] = "Ethereal Orb",
+        [3] = "City"
+    }
+    local args7 = {
         [1] = "rebirthRequest"
     }
+    
     orbEvent:FireServer(unpack(args1))
     orbEvent:FireServer(unpack(args2))
-    rebirthEvent:FireServer(unpack(args3))
+    orbEvent:FireServer(unpack(args3))
+    orbEvent:FireServer(unpack(args4))
+    orbEvent:FireServer(unpack(args5))
+    orbEvent:FireServer(unpack(args6))
+    rebirthEvent:FireServer(unpack(args7))
+    
     task.wait()
 end
