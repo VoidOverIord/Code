@@ -1,3 +1,7 @@
+local rEvents = game:GetService("ReplicatedStorage"):WaitForChild("rEvents")
+local orbEvent = rEvents:WaitForChild("orbEvent")
+local rebirthEvent = rEvents:WaitForChild("rebirthEvent")
+
 for i = 1, math.huge do
     local args1 = {
         [1] = "collectOrb",
@@ -9,8 +13,11 @@ for i = 1, math.huge do
         [2] = "Gem",
         [3] = "City"
     }
-    local orbEvent = game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("orbEvent")
+    local args3 = {
+        [1] = "rebirthRequest"
+    }
     orbEvent:FireServer(unpack(args1))
     orbEvent:FireServer(unpack(args2))
+    rebirthEvent:FireServer(unpack(args3))
     task.wait()
 end
