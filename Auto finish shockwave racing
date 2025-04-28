@@ -1,6 +1,6 @@
-
+-- Use at your own risk
 local player = game:GetService("Players").LocalPlayer
-local part = workspace.Finish.Finish
+local part = workspace:WaitForChild("Finish"):WaitForChild("Finish")
 
 local function startTouchSpam(character)
     local hum = character:WaitForChild("HumanoidRootPart")
@@ -16,13 +16,15 @@ end
 
 local function setupGamemodeCheck()
     local success, label = pcall(function()
-        return player:WaitForChild("PlayerGui"):WaitForChild("Main"):WaitForChild("Primary"):WaitForChild("HUD"):WaitForChild("SubFrame"):WaitForChild("GamemodeLabel")
+        return player:WaitForChild("PlayerGui"):WaitForChild("Main")
+            :WaitForChild("Primary"):WaitForChild("HUD")
+            :WaitForChild("SubFrame"):WaitForChild("GamemodeLabel")
     end)
+
     if success and label then
         local function check()
             if label.Text == "Winning Streak" then
-                player:Kick("Gamemode is Winning Streak. We have kicked you because we have found out this gamemode can ban you if you get too many wins if you wish to continue playing next time you can use infinite yield antikick alternatively you can use remotespy and spam fire remote for the gamemode you voted for
-")
+                player:Kick("Gamemode is Winning Streak. We have kicked you because we have found out this gamemode can ban you if you get too many wins. If you wish to continue playing next time, you can use Infinite Yield AntiKick. Alternatively, you can use RemoteSpy and spam the fire remote for the gamemode you voted for.")
             end
         end
         check()
