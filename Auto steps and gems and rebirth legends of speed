@@ -2,7 +2,7 @@ local rEvents = game:GetService("ReplicatedStorage"):WaitForChild("rEvents")
 local orbEvent = rEvents:WaitForChild("orbEvent")
 local rebirthEvent = rEvents:WaitForChild("rebirthEvent")
 
-local args1 = {"collectOrb", "Gem", "City"}
+local args1 = {"collectOrb", "Infernal Gem", "City"}
 local args2 = {"collectOrb", "Ethereal Orb", "City"}
 local args3 = {"rebirthRequest"}
 
