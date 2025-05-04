@@ -57,7 +57,7 @@ Tab:AddButton({
 		preventObjectRegeneration()
 
 		StatusLabel:Set("Status: Removed Anticheat")
-		OrionLib:MakeNotification({Name = "Anticheat Disabler ("Sdbfr), Content = "All client sided anticheat has been removed", Time = 3})
+		OrionLib:MakeNotification({Name = "Anticheat Disabler (Sdbfr)", Content = "All client sided anticheat has been removed", Time = 3})
 	end
 })
 
