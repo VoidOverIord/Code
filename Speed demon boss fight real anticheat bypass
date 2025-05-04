@@ -51,51 +51,44 @@ end
 
 preventObjectRegeneration()
 
-Tab:AddButton({
-	Name = "Remove Anticheat",
-	Callback = function()
-		preventObjectRegeneration()
-
-		StatusLabel:Set("Status: Removed Anticheat")
-		OrionLib:MakeNotification({Name = "Anticheat Disabler (Sdbfr)", Content = "All client sided anticheat has been removed", Time = 3})
-	end
-})
+StatusLabel:Set("Status: Removed Anticheat")
+OrionLib:MakeNotification({Name = "Anticheat Disabler (Sdbfr)", Content = "All client sided anticheat has been removed", Time = 3})
 
 local connection
 local checking = true
 
 local function antiCheatCheck(humanoid)
-	if connection then connection:Disconnect() end
-	connection = RunService.Heartbeat:Connect(function()
-		if not checking then return end
-		if humanoid:GetState() == Enum.HumanoidStateType.Swimming then
-			checking = false
-			connection:Disconnect()
-			LocalPlayer:Kick("You have been kicked for swimming in hopes of you not being logged.")
-		elseif humanoid.PlatformStand then
-			checking = false
-			connection:Disconnect()
-			LocalPlayer:Kick("You have been kicked for using platform state to save you from being logged.")
-		end
-	end)
-	task.spawn(function()
-		task.wait()
-		while checking do
-			task.wait()
-		end
-	end)
+    if connection then connection:Disconnect() end
+    connection = RunService.Heartbeat:Connect(function()
+        if not checking then return end
+        if humanoid:GetState() == Enum.HumanoidStateType.Swimming then
+            checking = false
+            connection:Disconnect()
+            LocalPlayer:Kick("You have been kicked for swimming in hopes of you not being logged.")
+        elseif humanoid.PlatformStand then
+            checking = false
+            connection:Disconnect()
+            LocalPlayer:Kick("You have been kicked for using platform state to save you from being logged.")
+        end
+    end)
+    task.spawn(function()
+        task.wait()
+        while checking do
+            task.wait()
+        end
+    end)
 end
 
 local function monitorCharacter()
-	local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-	local humanoid = character:FindFirstChild("Humanoid") or character:WaitForChild("Humanoid")
-	antiCheatCheck(humanoid)
-	LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-		if not checking then return end
-		if connection then connection:Disconnect() end
-		humanoid = newCharacter:WaitForChild("Humanoid")
-		antiCheatCheck(humanoid)
-	end)
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChild("Humanoid") or character:WaitForChild("Humanoid")
+    antiCheatCheck(humanoid)
+    LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+        if not checking then return end
+        if connection then connection:Disconnect() end
+        humanoid = newCharacter:WaitForChild("Humanoid")
+        antiCheatCheck(humanoid)
+    end)
 end
 
 monitorCharacter()
