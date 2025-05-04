@@ -20,20 +20,28 @@ local function preventObjectRegeneration()
                 end
             end
         end
-        if PlayerGui then
-            local ac = PlayerGui:FindFirstChild("ac")
-            if ac then
-                ac:Destroy()
-            end
-        end
+ end
 
         if PlayerScripts then
             local kmdl = PlayerScripts:FindFirstChild("Kmdl")
             if kmdl and kmdl:IsA("LocalScript") then
                 kmdl.Disabled = true
+                
+            end
+        end
+       if PlayerGui then
+            local ac = PlayerGui:FindFirstChild("ac")
+            if ac then
+                ac:Destroy()
+            end
+        if PlayerScripts then
+            local kmdl = PlayerScripts:FindFirstChild("Kmdl")
+            if kmdl and kmdl:IsA("LocalScript") then
+                
                 kmdl:Destroy()
             end
         end
+        
 
         local suspicious = {"kys", "noo", "LoggerEvent", "fn", "relfx"}
         for _, name in ipairs(suspicious) do
