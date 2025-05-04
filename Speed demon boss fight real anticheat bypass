@@ -1,83 +1,101 @@
-local _0x9b1a=game:GetService("Players")
-local _0x2a5b=_0x9b1a.LocalPlayer
-local _0x5d0f=_0x2a5b:FindFirstChild("PlayerGui")
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/jensonhirst/Orion/main/source"))()
 
-if _0x5d0f then
-    _0x5d0f.ChildAdded:Connect(function(_0x3c0a)
-        if _0x3c0a.Name=="fire" then
-            _0x3c0a:Destroy()
+local Window = OrionLib:MakeWindow({Name = "Speed Demon Anticheat Bypass made by VoidOverlord", HidePremium = false, SaveConfig = false})
+local Tab = Window:MakeTab({Name = "Anticheat Disabler", Icon = "rbxassetid://4483345998", PremiumOnly = false})
+local StatusLabel = Tab:AddLabel("Status: Waiting for actions...")
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:FindFirstChild("PlayerGui")
+local PlayerScripts = LocalPlayer:FindFirstChild("PlayerScripts")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+
+local function preventObjectRegeneration()
+    local function destroySuspiciousObjects()
+        if PlayerGui then
+            for _, child in pairs(PlayerGui:GetChildren()) do
+                if child.Name == "fire" then
+                    child:Destroy()
+                end
+            end
         end
+        if PlayerGui then
+            local ac = PlayerGui:FindFirstChild("ac")
+            if ac then
+                ac:Destroy()
+            end
+        end
+
+        if PlayerScripts then
+            local kmdl = PlayerScripts:FindFirstChild("Kmdl")
+            if kmdl and kmdl:IsA("LocalScript") then
+                kmdl.Disabled = true
+                kmdl:Destroy()
+            end
+        end
+
+        local suspicious = {"kys", "noo", "LoggerEvent", "fn", "relfx"}
+        for _, name in ipairs(suspicious) do
+            local found = ReplicatedStorage:FindFirstChild(name)
+            if found then
+                found:Destroy()
+            end
+        end
+    end
+
+    RunService.Heartbeat:Connect(function()
+        destroySuspiciousObjects()
     end)
 end
 
-local _0x7b7d=_0x2a5b:FindFirstChild("PlayerScripts")
-if _0x7b7d then
-    local _0x8f9a=_0x7b7d:FindFirstChild("Kmdl")
-    if _0x8f9a and _0x8f9a:IsA("LocalScript") then
-        _0x8f9a.Disabled=true
-    end
-end
+preventObjectRegeneration()
 
-if _0x5d0f then
-    local _0x91d1=_0x5d0f:FindFirstChild("ac")
-    if _0x91d1 then
-        _0x91d1:Destroy()
-    end
-end
+Tab:AddButton({
+	Name = "Remove Anticheat",
+	Callback = function()
+		preventObjectRegeneration()
 
-if _0x7b7d then
-    local _0x4e9a=_0x7b7d:FindFirstChild("Kmdl")
-    if _0x4e9a then
-        _0x4e9a:Destroy()
-    end
-end
+		StatusLabel:Set("Status: Removed Anticheat")
+		OrionLib:MakeNotification({Name = "Anticheat Disabler ("Sdbfr", Content = "All client sided anticheat has been removed", Time = 3})
+	end
+})
 
-local _0x8c7f=game:GetService("ReplicatedStorage")
-local _0x4f8a={"kys","noo","LoggerEvent","fn","relfx"}
-
-for _,_0x3f5b in ipairs(_0x4f8a) do
-    local _0x8d9f=_0x8c7f:FindFirstChild(_0x3f5b)
-    if _0x8d9f then
-        _0x8d9f:Destroy()
-    end
-end
-
-local _0x4b4d=game:GetService("RunService")
 local connection
-local checking=true
+local checking = true
 
-local function _0x78b0(_0x89ac)
-    if connection then connection:Disconnect() end
-    connection=_0x4b4d.Heartbeat:Connect(function()
-        if not checking then return end
-        if _0x89ac:GetState()==Enum.HumanoidStateType.Swimming then
-            checking=false
-            connection:Disconnect()
-            _0x2a5b:Kick("You have been kicked for swimming in hopes of you not being logged.")
-        elseif _0x89ac.PlatformStand then
-            checking=false
-            connection:Disconnect()
-            _0x2a5b:Kick("You have been kicked for using platform state to save you from being logged.")
-        end
-    end)
-    task.spawn(function()
-        task.wait(10)
-        while checking do
-            task.wait(1)
-        end
-    end)
+local function antiCheatCheck(humanoid)
+	if connection then connection:Disconnect() end
+	connection = RunService.Heartbeat:Connect(function()
+		if not checking then return end
+		if humanoid:GetState() == Enum.HumanoidStateType.Swimming then
+			checking = false
+			connection:Disconnect()
+			LocalPlayer:Kick("You have been kicked for swimming in hopes of you not being logged.")
+		elseif humanoid.PlatformStand then
+			checking = false
+			connection:Disconnect()
+			LocalPlayer:Kick("You have been kicked for using platform state to save you from being logged.")
+		end
+	end)
+	task.spawn(function()
+		task.wait()
+		while checking do
+			task.wait()
+		end
+	end)
 end
 
-local function _0x41ac()
-    local _0x68ac=_0x2a5b.Character or _0x2a5b.CharacterAdded:Wait()
-    local _0x44ac=_0x68ac:FindFirstChild("Humanoid") or _0x68ac:WaitForChild("Humanoid")
-    _0x78b0(_0x44ac)
-    _0x2a5b.CharacterAdded:Connect(function(_0x68ac)
-        if not checking then return end
-        if connection then connection:Disconnect() end
-        _0x44ac=_0x68ac:WaitForChild("Humanoid")
-        _0x78b0(_0x44ac)
-    end)
+local function monitorCharacter()
+	local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local humanoid = character:FindFirstChild("Humanoid") or character:WaitForChild("Humanoid")
+	antiCheatCheck(humanoid)
+	LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+		if not checking then return end
+		if connection then connection:Disconnect() end
+		humanoid = newCharacter:WaitForChild("Humanoid")
+		antiCheatCheck(humanoid)
+	end)
 end
 
-_0x41ac()
+monitorCharacter()
