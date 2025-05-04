@@ -1,9 +1,7 @@
-local KavoUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/SomeRepo/KavoUI/main/KavoUI.lua"))()
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/jensonhirst/Orion/main/source"))()
 
-local Window = KavoUI:CreateWindow("Speed Demon Anticheat Bypass made by VoidOverlord", Enum.KeyCode.F5)
-
-local Tab = Window:AddTab("Anticheat Disabler")
-
+local Window = OrionLib:MakeWindow({Name = "Speed Demon Anticheat Bypass made by VoidOverlord", HidePremium = false, SaveConfig = false})
+local Tab = Window:MakeTab({Name = "Anticheat Disabler", Icon = "rbxassetid://4483345998", PremiumOnly = false})
 local StatusLabel = Tab:AddLabel("Status: Waiting for actions...")
 
 local Players = game:GetService("Players")
@@ -28,7 +26,6 @@ local function preventObjectRegeneration()
                 kmdl.Disabled = true
             end
         end
-
         if PlayerGui then
             local ac = PlayerGui:FindFirstChild("ac")
             if ac then
@@ -57,47 +54,51 @@ local function preventObjectRegeneration()
     end)
 end
 
-Tab:AddButton("Remove Anticheat", function()
-    preventObjectRegeneration()
-    StatusLabel:SetText("Status: Removed Anticheat")
-    KavoUI:MakeNotification({Title = "Anticheat Disabler", Text = "All client sided anticheat has been removed", Duration = 3})
-end)
+Tab:AddButton({
+	Name = "Remove Anticheat",
+	Callback = function()
+		preventObjectRegeneration()
+		StatusLabel:Set("Status: Removed Anticheat")
+		OrionLib:MakeNotification({
+			Name = "Anticheat Disabler",
+			Content = "All client sided anticheat has been removed",
+			Time = 3
+		})
+	end
+})
 
 local connection
 local checking = true
 
 local function antiCheatCheck(humanoid)
-    if connection then connection:Disconnect() end
-    connection = RunService.Heartbeat:Connect(function()
-        if not checking then return end
-        if humanoid:GetState() == Enum.HumanoidStateType.Swimming then
-            checking = false
-            connection:Disconnect()
-            LocalPlayer:Kick("You have been kicked for swimming in hopes of you not being logged.")
-        elseif humanoid.PlatformStand then
-            checking = false
-            connection:Disconnect()
-            LocalPlayer:Kick("You have been kicked for using platform state to save you from being logged.")
-        end
-    end)
-    task.spawn(function()
-        task.wait()
-        while checking do
-            task.wait()
-        end
-    end)
+	if connection then connection:Disconnect() end
+	connection = RunService.Heartbeat:Connect(function()
+		if not checking then return end
+		if humanoid:GetState() == Enum.HumanoidStateType.Swimming then
+			checking = false
+			connection:Disconnect()
+			LocalPlayer:Kick("You have been kicked for swimming in hopes of you not being logged.")
+		elseif humanoid.PlatformStand then
+			checking = false
+			connection:Disconnect()
+			LocalPlayer:Kick("You have been kicked for using platform state to save you from being logged.")
+		end
+	end)
+	task.spawn(function()
+		while checking do task.wait() end
+	end)
 end
 
 local function monitorCharacter()
-    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local humanoid = character:FindFirstChild("Humanoid") or character:WaitForChild("Humanoid")
-    antiCheatCheck(humanoid)
-    LocalPlayer.CharacterAdded:Connect(function(newCharacter)
-        if not checking then return end
-        if connection then connection:Disconnect() end
-        humanoid = newCharacter:WaitForChild("Humanoid")
-        antiCheatCheck(humanoid)
-    end)
+	local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+	local humanoid = character:FindFirstChild("Humanoid") or character:WaitForChild("Humanoid")
+	antiCheatCheck(humanoid)
+	LocalPlayer.CharacterAdded:Connect(function(newCharacter)
+		if not checking then return end
+		if connection then connection:Disconnect() end
+		humanoid = newCharacter:WaitForChild("Humanoid")
+		antiCheatCheck(humanoid)
+	end)
 end
 
 monitorCharacter()
