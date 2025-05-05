@@ -10,6 +10,9 @@ local PlayerGui = LocalPlayer:FindFirstChild("PlayerGui")
 local PlayerScripts = LocalPlayer:FindFirstChild("PlayerScripts")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+if game.PlaceVersion ~= 995 then
+    Players.LocalPlayer:Kick("Game updated script is disabled until we check if the script is still working fine and it will be enabled again")
+end
 
 local function preventObjectRegeneration()
     local function destroySuspiciousObjects()
