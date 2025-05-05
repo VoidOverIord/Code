@@ -61,14 +61,15 @@ Tab:AddButton({
 		StatusLabel:Set("Status: Removed Anticheat")
 		OrionLib:MakeNotification({
 			Name = "Anticheat Disabler",
-			Content = "All client sided anticheat has been removed",
-			Time = 3
+			Content = "All client sided anticheat has been removed from SDBFR note : you have to re-execute this script again when you join and you can't fly or swim",
+			Time = 5
 		})
 	end
 })
 
 local connection
 local checking = true
+
 
 local function antiCheatCheck(humanoid)
 	if connection then connection:Disconnect() end
